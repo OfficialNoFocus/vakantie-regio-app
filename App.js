@@ -7,10 +7,51 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Location from "expo-location";
+
 import Home from './components/Home';
-import Page2 from './components/Page2';
-import Page3 from './components/Page3';
+import Count from './components/CountPage';
+import Settings from './components/Settings';
 import Page4 from './components/Page4';
+
+const init = async () => {
+  // const value = await AsyncStorage.removeItem("Region");
+  try {
+    const value = await AsyncStorage.getItem("Region");
+    if (value !== null) {
+    } else {
+      setRegion();
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+const setRegion = async () => {
+  let { status } = await Location.requestForegroundPermissionsAsync();
+  if (status !== "granted") {
+    console.log("permission not granted");
+  }
+
+  const userLocation = await Location.getCurrentPositionAsync();
+  console.log(userLocation);
+  let region = "";
+  if (userLocation.coords.latitude >= 53) {
+    region = "noord";
+  }
+  if (userLocation.coords.latitude < 53) {
+    region = "midden";
+  }
+  if (userLocation.coords.latitude <= 52) {
+    region = "zuid";
+  }
+  try {
+    await AsyncStorage.setItem("Region", region);
+  } catch (e) {
+    console.log(e);
+  }
+};
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -31,7 +72,7 @@ function HomeStack() {
       />
       <Stack.Screen
         name="Details"
-        component={Page2}
+        component={Count}
         options={{ title: 'Details Page' }}
       />
     </Stack.Navigator>
@@ -49,19 +90,19 @@ function SettingsStack() {
       }}>
       <Stack.Screen
         name="Settings"
-        component={Page3}
+        component={Settings}
         options={{ title: 'Setting Page' }}
       />
       <Stack.Screen
         name="Details"
-        component={Page2}
+        component={Count}
         options={{ title: 'Details Page' }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Profile"
         component={Page4}
         options={{ title: 'Profile Page' }}
-      />
+      /> */}
     </Stack.Navigator>
   );
 }
@@ -104,20 +145,3 @@ function App() {
 }
 
 export default App;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    //paddingTop: Constants.statusBarHeight,
-  },
-  textBox: {
-    borderWidth: 1,
-    padding: 4,
-    margin: 4,
-  },
-  pageBox: {
-    flex: 1,
-    marginLeft: 10,
-    marginRight: 10,
-  },
-});

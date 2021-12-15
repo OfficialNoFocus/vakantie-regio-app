@@ -1,9 +1,10 @@
-import { Text, ScrollView } from "react-native";
+import { Text, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ListItem } from "react-native-elements";
+import { NavigationContainer } from '@react-navigation/native';
 
-export default function Page1(props) {
+function Home({navigation}) {
   const [HolidayData, setHolidayData] = useState([]);
   const [Available, SetAvailable] = useState(false);
 
@@ -26,6 +27,11 @@ export default function Page1(props) {
   return (
     <ScrollView style={{ marginTop: 35 }}>
       <Text style={{ backgroundColor: "white" }}>{HolidayData.title}</Text>
+      <TouchableOpacity
+            style={styles.button}
+            onPress={() =>navigation.navigate('Details')}>
+            <Text>Dagen tot volgende Vakantie</Text>
+      </TouchableOpacity>
       {Available ? (
         HolidayData.vacations.map((d, i) => (
           <ListItem key={i} topDivider>
@@ -46,3 +52,13 @@ export default function Page1(props) {
     </ScrollView>
   );
 }
+
+export default Home;
+const styles = StyleSheet.create({
+  button: {
+    alignItems: 'center',
+    backgroundColor: '#77b7f7',
+    padding: '5%',
+    width: '100%',
+  },
+});
