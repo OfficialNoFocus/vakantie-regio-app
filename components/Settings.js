@@ -1,29 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Text, View } from "react-native";
+import { Settings, Text, View } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-//import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// const [Available, SetAvailable] = useState(false);
-
-// const setNewRegion = async (region) => {
-//   setRegion(region)
-//   try {
-//     await AsyncStorage.setItem("Region", region);
-//   } catch (e) {
-//     console.log(e);
-//   }
-//   console.log(region);
-// };
-// const getRegion = async () => {
-//   try {
-//     region = await AsyncStorage.getItem("Region");
-//   } catch (e) {
-//     console.log(e);
-//   }
-//   return region;
-// };
-
-export default function SettingsTab() {
+function SettingsTab() {
   const [Region, setRegion] = useState(getRegion);
   const setNewRegion = async (region) => {
     setRegion(region);
@@ -43,7 +23,7 @@ export default function SettingsTab() {
     setRegion(region);
     // return region;
   };
-getRegion()
+  getRegion();
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <View
@@ -66,3 +46,4 @@ getRegion()
     </View>
   );
 }
+export default SettingsTab;

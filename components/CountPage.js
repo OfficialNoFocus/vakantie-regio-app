@@ -1,9 +1,10 @@
-import { Text, View, TouchableOpacity } from "react-native";
+import { Text, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import CountDown from 'react-native-countdown-component';
+import { ListItem } from "react-native-elements";
+import CountDown from "react-native-countdown-component";
 
-export default function CountPage() {
+export default function CounterTab() {
   const [HolidayData, setHolidayData] = useState([]);
   const [Available, SetAvailable] = useState(false);
 
@@ -39,19 +40,18 @@ export default function CountPage() {
   }, []);
 
   function calculateDays(date) {
-    const _MS_PER_DAY = 1000 * 3600 * 24;
     const date1 = new Date();
     const date2 = new Date(date);
-    return Math.floor((date2 - date1) / _MS_PER_DAY);
+    return Math.floor((date2 - date1) / 1000);
   }
 
   return (
     <View style={{ flex: 1, justifyContent: "center" }}>
       {Available ? (
         <CountDown
-          until={60 * 60 * 24 * (HolidayData.daysToGo + 1)}
-          onFinish={() => alert("finished")}
-          onPress={() => alert("hello")}
+          until={HolidayData.daysToGo - 60 * 60 * 24}
+          onFinish={() => alert("YEEY vakantie")}
+          onPress={() => alert("wees eens niet zo ongeduldig")}
           size={20}
         />
       ) : (

@@ -5,7 +5,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
