@@ -51,6 +51,7 @@ const setRegion = async () => {
     console.log(e);
   }
 };
+setRegion();
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
