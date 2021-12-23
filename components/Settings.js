@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Settings, Text, View } from "react-native";
+import { Settings, Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import { ListItem } from "react-native-elements";
 import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-function SettingsTab() {
+function SettingsTab({ navigation }) {
   const [Region, setRegion] = useState(getRegion);
   const setNewRegion = async (region) => {
     setRegion(region);
@@ -43,7 +44,23 @@ function SettingsTab() {
           <Picker.Item label="zuid" value="zuid" />
         </Picker>
       </View>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('Information')}>
+        <Text>Ontwikkelaar informatie</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 export default SettingsTab;
+
+const styles = StyleSheet.create({
+  button: {
+    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: '#77b7f7',
+    padding: '5%',
+    margin:'5%',
+    width: '70%',
+  },
+});

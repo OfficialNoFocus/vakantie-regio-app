@@ -1,3 +1,7 @@
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
+
 import 'react-native-gesture-handler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
@@ -9,13 +13,12 @@ import React from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
 
-import Home from './components/Home';
+import Homepage from './components/Home';
 import Count from './components/CountPage';
 import Settings from './components/Settings';
-import Page4 from './components/Page4';
+import Information from './components/Information';
 
 const init = async () => {
-  // const value = await AsyncStorage.removeItem("Region");
   try {
     const value = await AsyncStorage.getItem("Region");
     if (value !== null) {
@@ -34,7 +37,7 @@ const setRegion = async () => {
   }
 
   const userLocation = await Location.getCurrentPositionAsync();
-  console.log(userLocation);
+  //console.log(userLocation);
   let region = "";
   if (userLocation.coords.latitude >= 53) {
     region = "noord";
@@ -51,7 +54,8 @@ const setRegion = async () => {
     console.log(e);
   }
 };
-setRegion();
+
+init();
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -67,13 +71,13 @@ function HomeStack() {
       }}>
       <Stack.Screen
         name="Home"
-        component={Home}
+        component={Homepage}
         options={{ title: 'Home Page' }}
       />
       <Stack.Screen
         name="Details"
         component={Count}
-        options={{ title: 'Details Page' }}
+        options={{ title: 'Countdown Page' }}
       />
     </Stack.Navigator>
   );
@@ -94,15 +98,10 @@ function SettingsStack() {
         options={{ title: 'Setting Page' }}
       />
       <Stack.Screen
-        name="Details"
-        component={Count}
-        options={{ title: 'Details Page' }}
+        name="Information"
+        component={Information}
+        options={{ title: 'Information Page' }}
       />
-      {/* <Stack.Screen
-        name="Profile"
-        component={Page4}
-        options={{ title: 'Profile Page' }}
-      /> */}
     </Stack.Navigator>
   );
 }
@@ -132,7 +131,7 @@ function App() {
             tabBarLabel: 'Settings',
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons
-                name="settings"
+                name="cog"
                 color={color}
                 size={size}
               />

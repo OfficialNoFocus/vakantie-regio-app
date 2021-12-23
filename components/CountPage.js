@@ -29,7 +29,7 @@ export default function CounterTab() {
           data.daysToGo = ans;
           dataSet = true;
         });
-        console.log(data);
+        //console.log(data);
         setHolidayData(data);
         SetAvailable(true);
       });

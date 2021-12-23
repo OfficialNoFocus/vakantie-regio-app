@@ -1,29 +1,37 @@
-import { Text, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
+import { Text, ScrollView, TouchableOpacity, StyleSheet, RefreshControl  } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ListItem } from "react-native-elements";
 import { Picker } from "@react-native-picker/picker";
-import { NavigationContainer } from '@react-navigation/native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-function Home({navigation}) {
+export default function HomePage({ navigation }) {
   const [HolidayData, setHolidayData] = useState([]);
   const [Available, SetAvailable] = useState(false);
   const [SchoolYear, SetSchoolYear] = useState("2021-2022");
   const [Region, setRegion] = useState();
+  const [refreshing, setRefreshing] = useState(false);
 
   function getHolidayData() {
     axios
-    .get(
-      "https://opendata.rijksoverheid.nl/v1/sources/rijksoverheid/infotypes/schoolholidays/schoolyear/" +
-        SchoolYear +
-        "?output=json"
-    )
+      .get(
+        "https://opendata.rijksoverheid.nl/v1/sources/rijksoverheid/infotypes/schoolholidays/schoolyear/" +
+          SchoolYear +
+          "?output=json"
+      )
       .then((res) => {
         const data = res.data.content[0];
         setHolidayData(data);
         SetAvailable(true);
       });
   }
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getRegion()
+    getHolidayData()
+    setRefreshing(false);
+  }, []);
+
   const getRegion = async () => {
     try {
       region = await AsyncStorage.getItem("Region");
@@ -39,22 +47,29 @@ function Home({navigation}) {
   }, [SchoolYear]);
 
   return (
-    <ScrollView style={{ marginTop: 35 }}>
+    <ScrollView 
+    refreshControl={
+      <RefreshControl
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+      />
+      }
+    >
       <Text style={{ backgroundColor: "white" }}>{HolidayData.title}</Text>
       <TouchableOpacity
-            style={styles.button}
-            onPress={() =>navigation.navigate('Details')}>
-            <Text>Dagen tot volgende Vakantie</Text>
+        style={styles.button}
+        onPress={() => navigation.navigate('Details')}>
+        <Text>Dagen tot volgende Vakantie</Text>
       </TouchableOpacity>
       <Picker
-        style={{ backgroundColor: "white" }}
+        style={{ backgroundColor: "white", padding: "8%" }}
         selectedValue={SchoolYear}
         onValueChange={(itemValue, itemIndex) => SetSchoolYear(itemValue)}
       >
         <Picker.Item label="2021-2022" value="2021-2022" />
         <Picker.Item label="2022-2023" value="2022-2023" />
         <Picker.Item label="2023-2024" value="2023-2024" />
-      </Picker>
+      </Picker >
       {Available ? (
         HolidayData.vacations.map((d, i) => (
           <ListItem key={i} topDivider>
@@ -83,7 +98,6 @@ function Home({navigation}) {
   );
 }
 
-export default Home;
 const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
